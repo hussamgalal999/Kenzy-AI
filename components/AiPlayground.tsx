@@ -8,6 +8,9 @@ interface AiPlaygroundProps {
   onBack: () => void;
 }
 
+/**
+ * Renders the AI Playground component with various features.
+ */
 const AiPlayground: React.FC<AiPlaygroundProps> = ({ navigate, onBack }) => {
   const { t } = useI18n();
 

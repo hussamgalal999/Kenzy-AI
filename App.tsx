@@ -43,6 +43,15 @@ interface RewardNotification {
     icon: string;
 }
 
+/**
+ * Main application component that manages the user interface and state for the reading application.
+ *
+ * This component handles user authentication, book management, view navigation, and reward notifications.
+ * It utilizes various hooks to manage state and side effects, including loading books from Firestore,
+ * updating user achievements, and rendering different views based on the current application state.
+ *
+ * @returns A React element representing the application UI.
+ */
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>(View.Bookshelf);
   const [viewStack, setViewStack] = useState<View[]>([View.Bookshelf]);
@@ -94,6 +103,9 @@ const App: React.FC = () => {
     }
   }, [user, authLoading]);
 
+  /**
+   * Displays a reward notification and removes it after 4 seconds.
+   */
   const showRewardNotification = (notification: Omit<RewardNotification, 'id'>) => {
       const newNotification = { ...notification, id: Date.now() };
       setRewardNotifications(prev => [...prev, newNotification]);
@@ -102,6 +114,15 @@ const App: React.FC = () => {
       }, 4000);
   };
 
+  /**
+   * Triggers a reward based on the specified activity type and updates the user's profile.
+   *
+   * The function first checks if the user and userProfile are available. It then updates the user's streak and checks for any streak-related achievements. Depending on the activity type ('book_read', 'quiz_complete', or 'story_created'), it calculates the gems earned and updates the corresponding achievements. Finally, it updates the database with the new gems and achievements, and shows notifications for any rewards earned.
+   *
+   * @param type - The type of activity that triggered the reward, which can be 'book_read', 'quiz_complete', or 'story_created'.
+   * @param data - Optional data related to the activity, used for calculating rewards in the case of quizzes.
+   * @returns Promise<void> - A promise that resolves when the reward process is complete.
+   */
   const triggerReward = async (type: 'book_read' | 'quiz_complete' | 'story_created', data?: any) => {
       if (!user || !userProfile) return;
 
@@ -166,6 +187,16 @@ const App: React.FC = () => {
       await refreshUserProfile();
   };
 
+  /**
+   * Update the state of a book in the local store and Firestore.
+   *
+   * This function updates the local state of books by mapping over the previous books and applying the updates to the specified book.
+   * If the user is authenticated and the Firestore is configured, it attempts to update the book in Firestore.
+   * Errors during the Firestore update are logged to the console.
+   *
+   * @param bookId - The ID of the book to be updated.
+   * @param updates - An object containing the properties to update in the book.
+   */
   const updateBookState = async (bookId: string, updates: Partial<Omit<Book, 'id'>>) => {
     setBooks(prevBooks =>
         prevBooks.map(b => (b.id === bookId ? { ...b, ...updates } : b))
@@ -183,6 +214,9 @@ const App: React.FC = () => {
     }
   };
 
+  /**
+   * Navigates to a new view by updating the view stack and current view.
+   */
   const navigate = (view: View) => {
     setViewStack(prev => [...prev, view]);
     setCurrentView(view);
@@ -212,6 +246,9 @@ const App: React.FC = () => {
   };
 
   // Fix: Add a dedicated function to return to the library, resetting the view stack.
+  /**
+   * Resets the selected book and view state to the bookshelf.
+   */
   const handleReturnToLibrary = () => {
     setSelectedBook(null);
     setInitialBookAction(null);
@@ -221,12 +258,24 @@ const App: React.FC = () => {
   };
 
 
+  /**
+   * Handles the selection of a book and navigation to the reading view.
+   */
   const handleSelectBook = (book: Book, options?: { initialAction?: 'share' | 'pdf' }) => {
     setSelectedBook(book);
     setInitialBookAction(options?.initialAction || null);
     navigate(View.ReadBook);
   };
 
+  /**
+   * Handles the creation of a new story by saving it to the database.
+   *
+   * This function generates a unique ID for the new book and attempts to save it to the user's Firestore collection.
+   * If the save operation is successful, it updates the local state with the new book and triggers a reward.
+   * In case of an error during the save process, it logs the error and alerts the user.
+   *
+   * @param newBook - The book object containing the details of the new story to be created.
+   */
   const handleStoryCreated = async (newBook: Book) => {
     let bookWithId = { ...newBook, id: `local-${Date.now()}` };
     if (user && isFirebaseConfigured && db) {
@@ -248,11 +297,17 @@ const App: React.FC = () => {
     setCurrentView(View.Bookshelf);
   };
 
+  /**
+   * Sets the selected book and navigates to the BookComplete view.
+   */
   const handleBookComplete = (book: Book) => {
     setSelectedBook(book);
     navigate(View.BookComplete);
   };
 
+  /**
+   * Initiates the quiz by setting the quiz book and navigating to the quiz view.
+   */
   const handleStartQuiz = (book: Book) => {
     setQuizBook(book);
     navigate(View.TakeQuiz);
@@ -302,6 +357,9 @@ const App: React.FC = () => {
   
   const showNavBar = !isFullScreenView;
   
+  /**
+   * Renders a loading screen with a spinner and loading message.
+   */
   const renderLoadingScreen = () => (
       <div className="flex justify-center items-center h-screen bg-background-light dark:bg-background-dark">
         <div className="flex flex-col items-center gap-4 p-8 bg-surface-light dark:bg-surface-dark rounded-2xl shadow-lg">
@@ -311,6 +369,16 @@ const App: React.FC = () => {
       </div>
   );
 
+  /**
+   * Renders the appropriate view component based on the current view state.
+   *
+   * The function uses a switch statement to determine which component to render based on the value of currentView.
+   * It handles various views such as CreateStory, ReadBook, BookComplete, and others, ensuring that the correct props are passed to each component.
+   * If a selectedBook or quizBook is present, it retrieves the corresponding book from the books array.
+   * The function defaults to rendering the Bookshelf component if no specific view matches.
+   *
+   * @returns A React component corresponding to the current view.
+   */
   const renderView = () => {
     switch (currentView) {
       case View.CreateStory:

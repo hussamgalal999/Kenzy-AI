@@ -32,6 +32,16 @@ const StarRating: React.FC<{ rating: number; onRate: (rating: number) => void }>
 };
 
 
+/**
+ * Renders the book completion screen with options to rate the book and start a quiz.
+ *
+ * This component displays the book's title, cover, and a congratulatory message upon completion.
+ * It allows users to rate the book and view their last quiz attempt score if available.
+ * Additionally, it provides buttons to retake the quiz or return to the library.
+ * The reward is triggered only when the book's progress reaches 100%.
+ *
+ * @param {BookCompletionScreenProps} props - The properties for the BookCompletionScreen component.
+ */
 const BookCompletionScreen: React.FC<BookCompletionScreenProps> = ({ book, onStartQuiz, onBackToLibrary, updateBookState, triggerReward }) => {
   const { t } = useI18n();
   const [rating, setRating] = useState(book.rating || 0);
@@ -43,6 +53,9 @@ const BookCompletionScreen: React.FC<BookCompletionScreenProps> = ({ book, onSta
     }
   }, [book.id]);
 
+  /**
+   * Updates the rating of a book.
+   */
   const handleRate = (newRating: number) => {
     setRating(newRating);
     updateBookState(book.id, { rating: newRating });
