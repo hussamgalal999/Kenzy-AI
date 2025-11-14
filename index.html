@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kenzy AI Storybook</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+      body {
+        font-family: 'Plus Jakarta Sans', 'Tajawal', sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .icon-sm .material-symbols-outlined { font-size: 20px; }
+      .icon-md .material-symbols-outlined { font-size: 24px; }
+      .icon-lg .material-symbols-outlined { font-size: 40px; }
+      .textLayer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        opacity: 1; /* Make it interactive */
+        line-height: 1.0;
+        user-select: text;
+      }
+
+      .textLayer > span {
+        color: transparent;
+        position: absolute;
+        white-space: pre;
+        cursor: text;
+        transform-origin: 0% 0%;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0",
+    "pdfjs-dist": "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs",
+    "firebase/app": "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js",
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js",
+    "firebase/": "https://aistudiocdn.com/firebase@^12.5.0/",
+    "jspdf": "https://esm.sh/jspdf@2.5.1",
+    "qrcode": "https://esm.sh/qrcode@1.5.3",
+    "pdfjs-dist/": "https://aistudiocdn.com/pdfjs-dist@^5.4.394/",
+    "@firebase/auth": "https://aistudiocdn.com/@firebase/auth@^1.11.1",
+    "@firebase/firestore": "https://aistudiocdn.com/@firebase/firestore@^4.9.2",
+    "@firebase/app": "https://aistudiocdn.com/@firebase/app@^0.14.5"
+  }
+}
+</script>
+<script>
+  tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13ec5b",
+            "background-light": "#FFFFFF",
+            "background-dark": "#111827",
+            "brand-teal": "#00C4B3",
+            "brand-yellow": "#FFD15C",
+            "brand-blue": "#3B4A6B",
+            "brand-purple": "#A499FF",
+            "brand-red": "#FF6B6B",
+            "light-gray": "#F0F0F0",
+            "surface-light": "#FFFFFF",
+            "surface-dark": "#1f2937",
+            "book-page": "#F5F5DC",
+            "text-color": "#36454F",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "Tajawal", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "2xl": "2rem",
+            "full": "9999px"
+          },
+          animation: {
+            flash: 'flash 0.5s ease-in-out',
+            'fade-in-down': 'fadeInDown 0.5s ease-in-out',
+          },
+          keyframes: {
+            flash: {
+              '0%, 100%': { color: 'currentColor', opacity: 0.7 },
+              '50%': { color: '#FFD15C', opacity: 1 },
+            },
+            fadeInDown: {
+              '0%': { opacity: 0, transform: 'translateY(-20px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
+            }
+          }
+        },
+      },
+  }
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="font-display bg-background-light dark:bg-background-dark">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

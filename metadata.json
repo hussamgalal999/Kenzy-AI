@@ -1,0 +1,7 @@
+{
+  "name": "Kenzy AI Storybook",
+  "description": "A magical app for kids to read, create, and publish their own AI-powered storybooks.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
