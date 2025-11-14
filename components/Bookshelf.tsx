@@ -21,6 +21,21 @@ interface BookshelfProps {
 
 type Tab = 'discover' | 'mybooks';
 
+/**
+ * Renders a bookshelf component displaying user and discover books.
+ *
+ * The component manages the active tab state between 'discover' and 'mybooks', filters books based on user input,
+ * and displays relevant sections such as continue reading and recommended books. It also integrates user profile
+ * information and provides navigation options to the PDF reader and user profile.
+ *
+ * @param {BookshelfProps} props - The properties for the bookshelf component.
+ * @param {Array<Book>} props.books - The list of books to display.
+ * @param {function} props.onSelectBook - Callback function to handle book selection.
+ * @param {function} props.onNavigateToProfile - Callback function to navigate to the user profile.
+ * @param {User} props.user - The current user object.
+ * @param {function} props.onNavigateToPdfReader - Callback function to navigate to the PDF reader.
+ * @returns {JSX.Element} The rendered bookshelf component.
+ */
 const Bookshelf: React.FC<BookshelfProps> = ({ books, onSelectBook, onNavigateToProfile, user, onNavigateToPdfReader }) => {
   const [activeTab, setActiveTab] = useState<Tab>('discover');
   const { t } = useI18n();
@@ -134,6 +149,9 @@ const Bookshelf: React.FC<BookshelfProps> = ({ books, onSelectBook, onNavigateTo
   );
 };
 
+/**
+ * Renders a tab button with a label, active state, and click handler.
+ */
 const TabButton: React.FC<{label: string, isActive: boolean, onClick: () => void}> = ({ label, isActive, onClick}) => (
     <button onClick={onClick} className={`w-1/2 rounded-full text-sm font-bold transition-all duration-300 ${isActive ? 'bg-white dark:bg-brand-blue/50 shadow text-primary' : 'text-brand-purple dark:text-white/70'}`}>
         {label}
@@ -141,6 +159,9 @@ const TabButton: React.FC<{label: string, isActive: boolean, onClick: () => void
 );
 
 
+/**
+ * A React functional component that displays a card for continuing reading a book.
+ */
 const ContinueReadingCard: React.FC<{ book: Book, onSelect: () => void }> = ({ book, onSelect }) => (
   <div onClick={onSelect} className="flex h-full flex-1 flex-col gap-3 rounded-lg w-40 shrink-0 cursor-pointer group">
     <div className="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-xl flex flex-col shadow-md group-hover:shadow-xl transition-shadow" style={{backgroundImage: `url("${book.coverUrl}")`}}></div>
@@ -167,12 +188,26 @@ const RecommendedCard: React.FC<{ book: Book, onSelect: () => void }> = ({ book,
   </div>
 );
 
+/**
+ * Renders a user book card component with options to select, share, or export the book.
+ * The component manages its own state for the visibility of a menu and handles clicks outside
+ * the menu to close it. It utilizes the `onSelect` function to perform actions based on user
+ * interactions with the book card and menu items.
+ *
+ * @param {Object} props - The component props.
+ * @param {Book} props.book - The book object containing details to display.
+ * @param {(book: Book, options?: SelectBookOptions) => void} props.onSelect - Callback function
+ * to handle book selection with optional parameters.
+ */
 const UserBookCard: React.FC<{ book: Book, onSelect: (book: Book, options?: SelectBookOptions) => void }> = ({ book, onSelect }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const { t } = useI18n();
 
     useEffect(() => {
+        /**
+         * Closes the menu if a click occurs outside of it.
+         */
         const handleClickOutside = (event: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
                 setMenuOpen(false);
@@ -202,6 +237,9 @@ const UserBookCard: React.FC<{ book: Book, onSelect: (book: Book, options?: Sele
     );
 };
 
+/**
+ * Renders a button with an icon and label that triggers an onClick event.
+ */
 const MenuItem: React.FC<{ icon: React.ReactNode, label: string, onClick: () => void }> = ({ icon, label, onClick }) => (
     <button onClick={onClick} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-brand-blue dark:text-white/90 hover:bg-light-gray dark:hover:bg-brand-blue/30 first:rounded-t-lg last:rounded-b-lg">
         <span className="text-brand-purple dark:text-white/70">{icon}</span>
