@@ -32,6 +32,13 @@ const ApiKeySelector: React.FC<ApiKeySelectorProps> = ({ onKeySelected, children
     checkKey();
   }, [checkKey]);
 
+  /**
+   * Handles the selection of an API key by interacting with the AI Studio SDK.
+   *
+   * This function checks if the AI Studio SDK is available and if the `openSelectKey` method is a function.
+   * If so, it calls this method to open the key selector. Upon success, it updates the UI to reflect that a key has been selected and triggers the `onKeySelected` callback.
+   * If the SDK is not available or an error occurs, it sets an appropriate error message.
+   */
   const handleSelectKey = async () => {
     try {
        if (window.aistudio && typeof window.aistudio.openSelectKey === 'function') {
